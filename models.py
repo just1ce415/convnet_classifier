@@ -4,6 +4,8 @@ from keras.models import Model
 from keras.initializers import random_uniform, glorot_uniform
 from tensorflow.keras.layers.experimental.preprocessing import RandomFlip, RandomRotation
 
+from custom_layers import FFC2D
+
 class ResNet50:
     def __init__(self):
         self.model = None
@@ -185,3 +187,80 @@ class ResNet50:
 
 class InceptionNet:
     pass
+
+class FFVGG:
+    def __init__(self):
+        self.model = None
+
+    def get_ffvgg_model(self):
+        return self.model
+
+    def print_summary(self):
+        print(self.model.summary())
+
+    def __data_augmenter(self):
+        data_augmentation = keras.Sequential()
+        data_augmentation.add(RandomFlip(mode='horizontal'))
+        data_augmentation.add(RandomRotation(0.2))
+        return data_augmentation
+
+    def build_model(self, input_shape = (256, 265, 3), classes = 5):
+        """
+        Implementation of simplified VGG-16 arch with Fast Fourier convolutions.
+
+        Arguments:
+        input_shape -- shape of the images of the dataset
+        classes -- integer, number of classes
+
+        Returns:
+        model -- a Model() instance in Keras
+        """
+        # Define the input as a tensor with shape input_shape
+        X_input = Input(input_shape)
+
+        # Augment data
+        data_augmentation = self.__data_augmenter()
+        X = data_augmentation(X_input)
+
+        # Zero-Padding
+        X = ZeroPadding2D((3, 3))(X)
+
+        # Stage 1
+        #X = FFC2D(nkernels=16, kernel_size=(3, 3))(X)
+        X = Conv2D(filters=64, kernel_size=(3,3), strides=(1,1))(X)
+        X = BatchNormalization(axis = 3)(X)
+        X = Activation('relu')(X)
+        X = MaxPooling2D((2, 2), strides=(2, 2))(X)
+
+        # Stage 2
+        #X = FFC2D(nkernels=32, kernel_size=(3, 3))(X)
+        X = Conv2D(filters=128, kernel_size=(3,3), strides=(1,1))(X)
+        X = BatchNormalization(axis = 3)(X)
+        X = Activation('relu')(X)
+        X = MaxPooling2D((2, 2), strides=(2, 2))(X)
+
+        # Stage 3
+        #X = FFC2D(nkernels=64, kernel_size=(3, 3))(X)
+        X = Conv2D(filters=256, kernel_size=(3,3), strides=(1,1))(X)
+        X = BatchNormalization(axis = 3)(X)
+        X = Activation('relu')(X)
+        X = MaxPooling2D((2, 2), strides=(2, 2))(X)
+
+        # Stage 4
+        #X = FFC2D(nkernels=128, kernel_size=(3, 3))(X)
+        X = Conv2D(filters=512, kernel_size=(3,3), strides=(1,1))(X)
+        X = BatchNormalization(axis = 3)(X)
+        X = Activation('relu')(X)
+        X = MaxPooling2D((2, 2), strides=(2, 2))(X)
+
+        # output layer
+        X = Flatten()(X)
+        X = Dense(classes, activation='softmax', kernel_initializer = glorot_uniform(seed=0))(X)
+        
+        # Create model
+        model = Model(inputs = X_input, outputs = X)
+
+        self.model = model
+
+        # compile model
+        self.model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])

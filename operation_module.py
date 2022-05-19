@@ -1,11 +1,12 @@
 import keras
+from sklearn.manifold import trustworthiness
 import tensorflow as tf
 from tensorflow.keras.preprocessing import image, image_dataset_from_directory
 import numpy as np
 from matplotlib.pyplot import imshow
 import matplotlib.pyplot as plt
 
-import models
+from models import ResNet50, FFVGG
 
 class ModelManager:
     def __init__(self, shape=256, labels=['1', '2', '3', '4', '5']):
@@ -36,9 +37,20 @@ class ModelManager:
         if self.__loaded:
             print("Pretrained model is already loaded.")
             return
-        resnet = models.ResNet50()
+        resnet = ResNet50()
         resnet.build_model((self.shape, self.shape, 3), self.classes)
         self.model = resnet.get_residual_model()
+
+    def create_ffvgg_model(self):
+        """
+        Creates Fast Fourier VGG model
+        """
+        if self.__loaded:
+            print("Pretrained model is already loaded.")
+            return
+        ffvgg = FFVGG()
+        ffvgg.build_model((self.shape, self.shape, 3), self.classes)
+        self.model = ffvgg.get_ffvgg_model()
 
     def load_model(self, path):
         """
@@ -114,12 +126,11 @@ class ModelManager:
             return
 
         # For early stop
-        callback = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=3)
+        #callback = tf.keras.callbacks.EarlyStopping(monitor='loss', patience=3)
 
         history = self.model.fit(self.train_dataset,
         validation_data=self.validation_dataset,
-        epochs=epochs, batch_size=batch_size,
-        callbacks=[callback])
+        epochs=epochs, batch_size=batch_size)
 
         # Plot details
         if plot_details:
@@ -155,8 +166,6 @@ class ModelManager:
         img = image.load_img(path, target_size=(256, 256))
         x = image.img_to_array(img)
         x = np.expand_dims(x, axis=0)
-        # Normalization
-        x = x/255.0
         print('Input image shape:', x.shape)
         imshow(img)
         plt.show()
@@ -170,5 +179,5 @@ class ModelManager:
 
 if __name__ == '__main__':
     manager = ModelManager(labels=['Albedo', 'Ayaka', 'Hu Tao', 'Kokomi', 'Neither'])
-    manager.load_model('genshin5resnet.keras')
-    manager.predict_for_single_image('single_tests\\kokomo.jpg', show_probs=True)
+    manager.load_model('genshin5ffvgg.keras')
+    manager.predict_for_single_image('single_tests/albedo.jpg', show_probs=True)

@@ -131,3 +131,4 @@ dmypy.json
 # Custom
 dataset/
 genshin5resnet.keras
+genshin5ffvgg.keras

@@ -132,3 +132,4 @@ dmypy.json
 dataset/
 genshin5resnet.keras
 genshin5ffvgg.keras
+genshin5ffvggtrue.keras

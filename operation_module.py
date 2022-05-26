@@ -179,5 +179,7 @@ class ModelManager:
 
 if __name__ == '__main__':
     manager = ModelManager(labels=['Albedo', 'Ayaka', 'Hu Tao', 'Kokomi', 'Neither'])
-    manager.load_model('genshin5ffvgg.keras')
-    manager.predict_for_single_image('single_tests/albedo.jpg', show_probs=True)
+    manager.create_ffvgg_model()
+    manager.load_data('dataset')
+    manager.train_model(epochs=80, batch_size=32, plot_details=True)
+    manager.save_model('genshin5ffvggtrue.keras')

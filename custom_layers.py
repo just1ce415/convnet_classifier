@@ -34,6 +34,19 @@ class FFC2D(tf.keras.layers.Layer):
         output = tf.nn.bias_add(output, self.bias)[:,crop_size:-1*crop_size, crop_size:-1*crop_size, :]
         return output   
 
+    def get_config(self):
+        config = super().get_config()
+        config.update({
+            "nkernels": self.nkernels,
+            "kernel_size": self.kernel_size,
+        })
+        return config
+
+    @classmethod
+    def from_config(cls, config):
+        return cls(**config)
+
+
 if __name__ == '__main__':
     X_input = Input((32, 32, 3))
     X = FFC2D(16, (3,3))(X_input)

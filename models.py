@@ -226,29 +226,29 @@ class FFVGG:
         X = ZeroPadding2D((3, 3))(X)
 
         # Stage 1
-        #X = FFC2D(nkernels=16, kernel_size=(3, 3))(X)
-        X = Conv2D(filters=64, kernel_size=(3,3), strides=(1,1))(X)
+        X = FFC2D(nkernels=16, kernel_size=(3, 3))(X)
+        #X = Conv2D(filters=64, kernel_size=(3,3), strides=(1,1))(X)
         X = BatchNormalization(axis = 3)(X)
         X = Activation('relu')(X)
         X = MaxPooling2D((2, 2), strides=(2, 2))(X)
 
         # Stage 2
-        #X = FFC2D(nkernels=32, kernel_size=(3, 3))(X)
-        X = Conv2D(filters=128, kernel_size=(3,3), strides=(1,1))(X)
+        X = FFC2D(nkernels=32, kernel_size=(3, 3))(X)
+        #X = Conv2D(filters=128, kernel_size=(3,3), strides=(1,1))(X)
         X = BatchNormalization(axis = 3)(X)
         X = Activation('relu')(X)
         X = MaxPooling2D((2, 2), strides=(2, 2))(X)
 
         # Stage 3
-        #X = FFC2D(nkernels=64, kernel_size=(3, 3))(X)
-        X = Conv2D(filters=256, kernel_size=(3,3), strides=(1,1))(X)
+        X = FFC2D(nkernels=64, kernel_size=(3, 3))(X)
+        #X = Conv2D(filters=256, kernel_size=(3,3), strides=(1,1))(X)
         X = BatchNormalization(axis = 3)(X)
         X = Activation('relu')(X)
         X = MaxPooling2D((2, 2), strides=(2, 2))(X)
 
         # Stage 4
-        #X = FFC2D(nkernels=128, kernel_size=(3, 3))(X)
-        X = Conv2D(filters=512, kernel_size=(3,3), strides=(1,1))(X)
+        X = FFC2D(nkernels=128, kernel_size=(3, 3))(X)
+        #X = Conv2D(filters=512, kernel_size=(3,3), strides=(1,1))(X)
         X = BatchNormalization(axis = 3)(X)
         X = Activation('relu')(X)
         X = MaxPooling2D((2, 2), strides=(2, 2))(X)

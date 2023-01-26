@@ -9,7 +9,7 @@ The module may be used via python interpreter
 
 ## Create a new model
 
-I'll use a Genshin Impact characters dataset (https://www.kaggle.com/datasets/just1ce5/genshin-impact-characters-dataset). While creating an instance, it's recommended to give labels in the appropriate (usually, alphabetical) order as a parameter.
+We will use a Genshin Impact characters dataset (https://www.kaggle.com/datasets/just1ce5/genshin-impact-characters-dataset). While creating an instance, it's recommended to give labels in the appropriate (usually, alphabetical) order as a parameter.
 ```python
 >>> manager = ModelManager(labels=['Albedo', 'Ayaka', 'Hu Tao', 'Kokomi', 'Neither'])
 >>> manager = create_residual_model()
@@ -91,4 +91,4 @@ Albedo:
 
 Impovements and new architectures coming soon.
 
-## The End :)
+## The End

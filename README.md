@@ -1,4 +1,4 @@
-# Fast Fourier convolution optimization in convolution neural network for multiclass classification
+# Fast Fourier convolution optimization in convolutional neural network for multiclass classification
 
 ## A set up
 The module may be used via python interpreter
